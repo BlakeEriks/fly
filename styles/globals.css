@@ -14,3 +14,11 @@ a {
 * {
   box-sizing: border-box;
 }
+
+.mapboxgl-ctrl {
+  display: none !important;
+}
+
+.mapboxgl-canvas {
+  cursor: auto;
+}
