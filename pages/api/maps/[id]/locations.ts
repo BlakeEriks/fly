@@ -1,22 +1,26 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { connect } from "utils/connection";
 import httpHandler from "utils/httpHandler";
-import { ResponseFuncs } from "utils/types";
+import { ResponseFuncs } from "../../../../utils/types";
 
 // Potential Responses
 const methodHandlers: ResponseFuncs = {
 
   GET: async (req: NextApiRequest, res: NextApiResponse) => {
     const { Map } = await connect()
-    const maps = await Map.find(req.query).populate('locations')
-    res.json(maps)
+    const map = await Map.findById(req.query.id).populate('locations')
+    res.json({locations: map.locations})
   },
 
-  // RESPONSE POST REQUESTS
   POST: async (req: NextApiRequest, res: NextApiResponse) => {
-    const { Map } = await connect()
-    res.json(await Map.create(req.body))
-  },
+    const { Map, Location } = await connect()
+    const location = await Location.create(req.body)
+    await Map.updateOne({_id: req.query.id},
+      { $push: { locations: location._id } })
+    res.json(location)
+  }
+
 }
+
 
 export default httpHandler(methodHandlers)
