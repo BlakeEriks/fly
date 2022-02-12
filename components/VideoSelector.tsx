@@ -1,9 +1,16 @@
 import { Flex } from "@chakra-ui/react"
 
-const VideoSelector = () => {
+interface VideoSelectorProps {
+  videos: any
+  setSelectedVideo: Function
+}
+
+const VideoSelector = ({setSelectedVideo, videos}: VideoSelectorProps) => {
+
   return (
     <Flex>
       Video Selector
+      {videos.map( (video: any, index: number) => <div key={index}>video {index}</div>)}
     </Flex>
   )
 }
