@@ -1,19 +1,14 @@
-import { Box, Flex } from "@chakra-ui/react"
-import { useState } from "react";
-import Map, { Marker, Popup } from 'react-map-gl';
+import { Flex } from "@chakra-ui/react"
+import Map, { Marker } from 'react-map-gl';
+import { Map as MyMap }  from "../utils/types";
 import Pin from "./Pin";
 
-const LocationSelector = () => {
+interface LocationSelectorProps {
+  map: MyMap | null
+  setSelectedLocation: Function
+}
 
-  const [viewPort, setViewport] = useState({
-    // width: '100vw',
-    // height: '100vh',
-    latitude: 21.485,
-    longitude: -157.95,
-    zoom: 8.5
-  })
-
-  const [selectedLocation, setSelectedLocation] = useState<string | null>()
+const LocationSelector = ({ map, setSelectedLocation }: LocationSelectorProps) => {
 
   return (
     <Flex w="33%" direction="column" position="relative">
@@ -23,11 +18,13 @@ const LocationSelector = () => {
         style={{width: 400, height: 300}}
         mapStyle="mapbox://styles/blakeeriks/ckzdcbisu001t14qc0qcyv2nc"
         attributionControl={false}
-        {...viewPort}
+        {...map}
       >
-        <Marker longitude={-157.7113} latitude={21.2615} anchor="bottom" >
-          <Pin onClick={() => setSelectedLocation("china walls")}/>
-        </Marker>
+        {map?.locations.map(({longitude, latitude, name}, index) => (
+          <Marker key={index} longitude={longitude} latitude={latitude} anchor="bottom" >
+            <Pin onClick={() => setSelectedLocation(name)}/>
+          </Marker>
+        ))}
       </Map>
     </Flex>
   )
